@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  baikal:
+    image: ckulka/baikal:nginx
+    restart: always
+    volumes:
+      - config:/var/www/baikal/config
+      - data:/var/www/baikal/Specific
+    networks:
+      - caddy
+      - baikal_network
+    labels:
+            caddy: ${BAIKAL_HOST}
+            caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+            
+            caddy.handle_path_0: /*
+            caddy.handle_path_0.0_reverse_proxy: "{{upstreams 80}}"
+            caddy.rewrite_0: /.well-known/carddav /remote.php/dav
+            caddy.rewrite_1: /.well-known/caldav /remote.php/dav
+
+            # The following scenario with hidden url did not work (probably due to nginx redirections in baikal image)
+            # To avoid being crawled by Malicious Web Crawlers,
+            # - Make index page to be forbidden.
+            # caddy.handle_path: /*
+            # caddy.handle_path.0_respond: "\"\" 403"
+            # caddy.handle_path.0_header.-Server: ""
+
+            # caddy.handle_path_1: /${BAIKAL_URL_PATH}/*
+            # caddy.handle_path_1.0_reverse_proxy: "{{upstreams 80}}"
+
+  db:
+    image: mariadb:11.3 # it could be mysql compatible db
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - baikal_network
+    environment:
+      MARIADB_DATABASE: ${BAIKAL_DB_NAME}
+      MARIADB_USER: ${BAIKAL_DB_USER}
+      MARIADB_PASSWORD: ${BAIKAL_DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${BAIKAL_DB_ROOT_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+      - db_conf:/etc/mysql
+
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BAIKAL_DATA_PATH}/config
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BAIKAL_DATA_PATH}/Specific
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BAIKAL_DATA_PATH}/db
+  db_conf:
+
+networks:
+  caddy:
+    external: true
+  baikal_network:
+    external: true
