@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+    kopia:
+        image: kopia/kopia:latest
+        hostname: kopia
+        container_name: kopia
+        restart: unless-stopped
+        networks:
+          - caddy
+        environment:
+            - KOPIA_PASSWORD=${KOPIA_REPOSITORY_PASSWORD} # probably not used
+            - TZ=Europe/Moscow
+        labels:
+          caddy: ${KOPIA_HOST}
+          caddy.handle_path: /*
+          caddy.handle_path_0: /*
+          caddy.handle_path_0.0_reverse_proxy: "{{upstreams ${KOPIA_PORT}}}"
+        volumes:
+            # Mount local folders needed by kopia
+            - ./config:/app/config
+            - ./cache:/app/cache
+            - ./logs:/app/logs
+            #- /backup:/backup # for local backup destination 
+            - ./export:/export # for export of backups
+            - ./tmp:/tmp # for snapshot mounting
+            - ${RCLONE_CONFIG_PATH}:/app/rclone # for rclone config in rclone scenario
+
+            # use /data path as a directory that should be backed up
+            # - ./data:/data:ro # path for backup
+            # or combine it with multiple folders:
+            #- /path/to/service1/data:/data/service1:ro
+            #- /path/to/service2/data:/data/service2:ro
+        command:
+            - server
+            - start
+            - --insecure
+            - --address=0.0.0.0:${KOPIA_PORT}
+            - --server-username=${KOPIA_USER}
+            - --server-password=${KOPIA_USER_PASSWORD}
+
+networks:
+  caddy:
+    external: true

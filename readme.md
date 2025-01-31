@@ -12,6 +12,14 @@ This repo is a cookbook of self-hosted projects setup used by the repo author
 
 [caddy](./caddy/)
 
+### obsidian-livesync
+
+[obsidian-livesync](./obsidian-livesync/)
+
 ## Backup
+
+### Kopia
+
+[kopia](./kopia/)
 
 ...

@@ -9,7 +9,7 @@ In docker file it has its own network shared with services relied on caddy.
 ## Run
 
 Being in *caddy* directory, run:
-`docker compose --env-file ./data/.secrets.env -f docker-compose.yml up -d`
+`docker compose -f docker-compose.yml up -d`
 
 ## Troubleshooting
 
