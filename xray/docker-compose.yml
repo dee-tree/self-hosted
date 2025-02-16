@@ -1,0 +1,33 @@
+
+services:
+  xray:
+    image: teddysun/xray:latest
+    container_name: xray
+    restart: always
+
+    networks:
+      - revproxy # reverse proxy network
+
+    volumes:
+      - vxrayconfig:/etc/xray:ro
+      - vlogs:/var/log/xray
+    ports:
+      - "127.0.0.1:${XRAY_PORT}:${XRAY_PORT}"
+
+networks:
+  revproxy:
+    external: true
+
+volumes:
+  vxrayconfig:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VXRAY_CONFIG_PATH}
+  vlogs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VLOGS_PATH}

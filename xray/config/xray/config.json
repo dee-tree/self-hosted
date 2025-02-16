@@ -1,0 +1,88 @@
+{
+    "api": {
+      "services": [
+        "HandlerService",
+        "LoggerService",
+        "StatsService"
+      ],
+      "tag": "api"
+    },
+    "log": {
+      "access": "/var/log/xray/access.log",
+      "error": "/var/log/xray/error.log",
+      "loglevel": "warning"
+    },
+    "inbounds": [
+      {
+        "port": "50101",
+        "protocol": "vless",
+        "settings": {
+          "clients": [
+            {
+              "email": "<client name>",
+              "flow": "xtls-rprx-vision",
+              "id": "<user-uuid>"
+            }
+          ],
+          "decryption": "none",
+          "fallbacks": [
+          ]
+        },
+        "sniffing": {
+            "enabled": true,
+            "destOverride": [
+                "http",
+                "tls",
+                "quic"
+            ]
+        },
+        "streamSettings": {
+            "network": "tcp",
+            "security": "reality",
+            "realitySettings": {
+                "dest": "maskingserver.com:443",
+                "privateKey": "<xray ed25519>",
+                "maxTimeDiff": 86400000, // accept only connections with client time in range of 1 day precision (to avoid time difference attack)
+                "serverNames": [
+                  "maskingserver.com"
+                ],
+                "shortIds": [
+                  "<short id for client>"
+                ],
+                "show": false,
+                "xver": 0
+              },
+              "tcpSettings": {
+                  "acceptProxyProtocol": true 
+              }
+        },
+        "tag": "reality"
+      }
+    ],
+    "outbounds": [
+      {
+        "protocol": "freedom",
+        "tag": "direct"
+      },
+      {
+        "protocol": "blackhole",
+        "tag": "blocked"
+      }
+    ],
+    "policy": {
+      "levels": {
+        "0": {
+          "handshake": 3, // The handshake time limit when the connection is established, in seconds, the default value is 4, it is recommended to be different from the default value
+          "connIdle": 280, // Connection idle time limit in seconds, the default value is 300, it is recommended to be different from the default value
+          "statsUserDownlink": true,
+          "statsUserUplink": true
+        }
+      },
+      "system": {
+        "statsInboundDownlink": true,
+        "statsInboundUplink": true,
+        "statsOutboundDownlink": true,
+        "statsOutboundUplink": true
+      }
+    }
+  }

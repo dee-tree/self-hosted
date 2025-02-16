@@ -1,9 +1,10 @@
-version: "3.8"
-
+services:
     couchserver:
         image: couchdb:3.1.2
+        container_name: obsidian-couchdb
+        restart: always
         ports:
-            - "5984:5984"
+            - "127.0.0.1:40103:5984"
         environment:
             - COUCHDB_USER=${COUCHDB_USER}
             - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
@@ -14,19 +15,8 @@ version: "3.8"
             - ./data:/opt/couchdb/data
             - ./config/local.ini:/opt/couchdb/etc/local.ini
         networks:
-            - caddy
-        labels:
-            caddy: ${COUCHDB_HOST}
-            # To avoid being crawled by Malicious Web Crawlers,
-            # - Make index page to be forbidden.
-            # - Set CouchDB into subdirectory
-            caddy.handle_path: /*
-            caddy.handle_path.0_respond: "\"\" 403"
-            caddy.handle_path.0_header.-Server: ""
-            caddy.handle_path_1: /${COUCHDB_URL_PATH}/*
-            caddy.handle_path_1.0_reverse_proxy: "{{upstreams 5984}}"
-        restart: always
-
+            - revproxy
+        
 networks:
-  caddy:
+  revproxy:
     external: true

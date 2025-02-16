@@ -1,20 +1,24 @@
 # Self-hosted recipes
 
-This repo is a cookbook of self-hosted projects setup used by the repo author
+This repo is a cookbook of various self-hosted projects as a single home lab
 
 ## Projects
+
+### nginx
+
+[nginx](./nginx/)
 
 ### Baikal
 
 [baikal](./baikal/)
 
-### Caddy
-
-[caddy](./caddy/)
-
 ### obsidian-livesync
 
 [obsidian-livesync](./obsidian-livesync/)
+
+### xray
+
+[xray](./xray/)
 
 ## Backup
 
@@ -23,3 +27,11 @@ This repo is a cookbook of self-hosted projects setup used by the repo author
 [kopia](./kopia/)
 
 ...
+
+---
+
+### Outdated
+
+### Caddy
+
+[caddy](./caddy/)

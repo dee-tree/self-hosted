@@ -1,0 +1,41 @@
+services:
+  reverse_proxy:
+    image: nginx:latest
+    container_name: reverse-proxy
+    restart: always
+
+    networks:
+      - revproxy # don't forget to create the network manually via docker
+
+    volumes:
+    - vconfd:/etc/nginx/conf.d/:ro
+    - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    - vwebroot:/var/www/:ro
+    - vcert:/etc/nginx/ssl/:ro
+    ports:
+    - "80:80"
+    - "443:443"
+
+networks:
+  revproxy:
+    external: true
+
+volumes:
+  vconfd:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VCONFD_PATH}
+  vwebroot:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VWEBROOT_PATH}
+  vcert:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VCERT_PATH}
