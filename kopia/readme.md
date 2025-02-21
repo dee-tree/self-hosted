@@ -2,7 +2,7 @@
 
 Kopia is a backup system.
 
-Rclone's encrypted config is not supported by kopia now. Hopefully waiting for its support.
+Rclone's encrypted config is supported through `RCLONE_CONFIG_PASS` environment variable.
 
 ## Setup
 
