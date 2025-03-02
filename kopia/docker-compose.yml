@@ -8,7 +8,8 @@ services:
         networks:
           - caddy
         environment:
-            - KOPIA_PASSWORD=${KOPIA_REPOSITORY_PASSWORD} # probably not used
+            - KOPIA_PASSWORD=${KOPIA_REPOSITORY_PASSWORD}
+            - RCLONE_CONFIG_PASS=${RCLONE_CONFIG_PASS}
             - TZ=Europe/Moscow
         labels:
           caddy: ${KOPIA_HOST}
