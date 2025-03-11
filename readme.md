@@ -12,9 +12,25 @@ This repo is a cookbook of various self-hosted projects as a single home lab
 
 [baikal](./baikal/)
 
+### Hemmelig
+
+[hemmelig](./hemmelig/)
+
+### Linkwarden
+
+[linkwarden](./linkwarden/)
+
 ### obsidian-livesync
 
 [obsidian-livesync](./obsidian-livesync/)
+
+### Portainer
+
+[portainer](./portainer/)
+
+### Seafile
+
+[seafile](./seafile/)
 
 ### xray
 

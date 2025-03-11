@@ -1,0 +1,48 @@
+services:
+  hemmelig:
+    image: hemmeligapp/hemmelig:v6
+    container_name: hemmelig
+    init: true
+    volumes:
+      - vdatafiles:/var/tmp/hemmelig/upload/files
+      - vdatabase:/home/node/hemmelig/database/
+    environment:
+      - SECRET_LOCAL_HOSTNAME=0.0.0.0
+      - SECRET_PORT=3000
+      - SECRET_HOST=${SECRET_HOST}
+      - SECRET_ROOT_USER=${SECRET_ROOT_USER}
+      - SECRET_ROOT_PASSWORD=${SECRET_ROOT_PASSWORD}
+      - SECRET_ROOT_EMAIL=${SECRET_ROOT_EMAIL}
+      - SECRET_UPLOAD_RESTRICTION=true # deny unauthorized visitors to upload
+      - SECRET_MAX_TEXT_SIZE=512 # upload text size limit, kb
+      - SECRET_FILE_SIZE=128 # upload file size limit, mb
+      - SECRET_FORCED_LANGUAGE=en
+      - SECRET_JWT_SECRET=${SECRET_JWT_SECRET}
+    ports:
+      - '127.0.0.1:40106:3000'
+    networks:
+      - revproxy
+    restart: always
+    stop_grace_period: 1m
+    healthcheck:
+      test: wget -O /dev/null 127.0.0.1:3000/api/healthz || exit 1
+      timeout: 5s
+      retries: 3
+
+networks:
+  revproxy:
+    external: true
+
+volumes:
+  vdatafiles: # files upload
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VDATAFILES_PATH}
+  vdatabase:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VDATABASE_PATH}

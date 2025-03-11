@@ -1,0 +1,24 @@
+services:
+    portainer:
+        image: portainer/portainer-ee:lts
+        container_name: portainer
+        ports:
+           - 127.0.0.1:${PORT}:9000
+        volumes:
+            - data:/data
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: unless-stopped
+        networks:
+            - revproxy
+
+networks:
+    revproxy:
+        external: true
+
+volumes:
+    data:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: ${VDATA_PATH}
