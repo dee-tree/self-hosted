@@ -1,0 +1,37 @@
+[
+    {
+        "storage_id": "primary_storage",
+        "name": "Primary Storage",
+        "is_default": true,
+        "fs": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-data"
+        },
+        "commits": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-data"
+        },
+        "blocks": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-data"
+        }
+      },
+
+      {
+        "storage_id": "backup_storage",
+        "name": "Backup Storage",
+        "is_default": false,
+        "fs": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-backup-data"
+        },
+        "commits": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-backup-data"
+        },
+        "blocks": {
+          "backend": "fs",
+          "dir": "/shared/seafile/seafile-backup-data"
+        }
+      }
+]

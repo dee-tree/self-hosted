@@ -29,5 +29,7 @@ COMPRESS_CACHE_BACKEND = 'locmem'
 TIME_ZONE = 'Europe/Berlin'
 CSRF_TRUSTED_ORIGINS = ["https://seafile.mydomain.com"]
 FILE_SERVER_ROOT = 'https://seafile.mydomain.com/seafhttp'
+ENABLE_STORAGE_CLASSES = True
+STORAGE_CLASS_MAPPING_POLICY = 'USER_SELECT'
 # DEBUG=True
 ALLOWED_HOSTS = ['127.0.0.1','.mydomain.com']
