@@ -11,7 +11,7 @@ Rclone's encrypted config is supported through `RCLONE_CONFIG_PASS` environment 
 ## Run
 
 Being in *kopia* directory, run:
-`docker compose --env-file ./data/.secrets.env -f docker-compose.yml up -d`
+`docker compose --env-file ./config/.secrets.env -f docker-compose.yml up -d`
 
 ## References
 

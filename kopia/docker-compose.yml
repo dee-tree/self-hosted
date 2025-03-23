@@ -1,4 +1,3 @@
-version: "3.8"
 services:
     kopia:
         image: kopia/kopia:latest
@@ -6,66 +5,96 @@ services:
         container_name: kopia
         restart: unless-stopped
         networks:
-          - caddy
+          - revproxy
         environment:
             - KOPIA_PASSWORD=${KOPIA_REPOSITORY_PASSWORD}
             - RCLONE_CONFIG_PASS=${RCLONE_CONFIG_PASS}
             - TZ=Europe/Moscow
-        labels:
-          caddy: ${KOPIA_HOST}
-          caddy.handle_path: /*
-          caddy.handle_path_0: /*
-          caddy.handle_path_0.0_reverse_proxy: "{{upstreams ${KOPIA_PORT}}}"
         volumes:
             # Mount local folders needed by kopia
             - vconfig:/app/config
             - vcache:/app/cache
-            - vlogs:/app/logs
-            #- /backup:/backup # for local backup destination 
-            - ./export:/export # for export of backups
-            - ./tmp:/tmp # for snapshot mounting
-            - ${RCLONE_CONFIG_PATH}:/app/rclone # for rclone config in rclone scenario
+            - vlog:/app/logs
+            - ./data/export:/export # for export of backups
+            - ./data/tmp:/tmp # for snapshot mounting
+            - cert:/cert # tls certificate
+
+            - ${RCLONE_CONFIG_PATH}:/app/rclone # for rclone config in rclone scenario (not for client repo)
 
             - ./config/docker-handle.sh:/docker-handle.sh:ro # script for stop/start containers
             - /var/run/docker.sock:/var/run/docker.sock:rw # docker unix socket to stop/start containers during snapshoting
 
-            # use /data path as a directory that should be backed up
-            # - ./data:/data:ro # path for backup
-            # or combine it with multiple folders:
-            #- /path/to/service1/data:/data/service1:ro
-            #- /path/to/service2/data:/data/service2:ro
+            # linkwarden
+            - linkwarden_data:/backup/linkwarden/data:ro
+            - linkwarden_pgdata:/backup/linkwarden/pgdata:ro
+
+            # baikal
+            - baikal_config:/backup/baikal/config:ro
+            - baikal_data:/backup/baikal/data:ro # Specific folder
+            - baikal_db:/backup/baikal/db:ro # all data (stored in external db)
+
+            # obsidian
+            - self-hosted-livesync-server_data:/backup/obsidian/data:ro
+            - /path/to/couchdb/self-hosted-livesync-server/data/local.ini:/backup/obsidian/local.ini:ro
         command:
             - server
             - start
-            - --insecure
+            - --grpc
+            # - --tls-generate-cert ### on first run, activate it
+            - --tls-cert-file=/cert/cert.pem
+            - --tls-key-file=/cert/key.pem
             - --enable-actions
             - --address=0.0.0.0:${KOPIA_PORT}
             - --server-username=${KOPIA_USER}
             - --server-password=${KOPIA_USER_PASSWORD}
 
 networks:
-  caddy:
+  revproxy:
     external: true
 
-
 volumes:
-    vconfig:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: ${VCONFIG}
-    vcache:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: ${VCACHE}
-    vlogs:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: ${VLOGS}
+  vconfig:
+      driver: local
+      driver_opts:
+          type: none
+          o: bind
+          device: ${VCONFIG}
+  vcache:
+      driver: local
+      driver_opts:
+          type: none
+          o: bind
+          device: ${VCACHE}
+  cert:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${CERT_PATH}
+  vlog:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VLOG_PATH}
 
+  baikal_config:
+    name: baikal_config
+    external: true
+  baikal_data:
+    name: baikal_data
+    external: true
+  baikal_db:
+    name: baikal_db
+    external: true
 
+  self-hosted-livesync-server_data:
+    name: self-hosted-livesync-server_data
+    external: true
+
+  linkwarden_data:
+    name: linkwarden_data
+    external: true
+  linkwarden_pgdata:
+    name: linkwarden_data
+    external: true
