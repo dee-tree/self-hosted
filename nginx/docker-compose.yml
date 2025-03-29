@@ -1,17 +1,19 @@
 services:
   reverse_proxy:
     image: nginx:latest
-    container_name: reverse-proxy
+    container_name: nginx
     restart: always
 
     networks:
       - revproxy # don't forget to create the network manually via docker
-
+    environment:
+      - TZ=$TZ
     volumes:
     - vconfd:/etc/nginx/conf.d/:ro
     - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
     - vwebroot:/var/www/:ro
     - vcert:/etc/nginx/ssl/:ro
+    - vlog:/var/log/nginx
     ports:
     - "80:80"
     - "443:443"
@@ -39,3 +41,9 @@ volumes:
       type: none
       o: bind
       device: ${VCERT_PATH}
+  vlog:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VLOG_PATH}

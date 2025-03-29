@@ -19,6 +19,7 @@
 - 50104 (linkwarden)
 - 50105 (seafile)
 - 50106 (hemmelig)
+- 50107 (marzban xray)
 - 50110 (kopia)
 - 50111 (portainer)
 
@@ -29,5 +30,6 @@
 - 40104 (linkwarden)
 - 40105 (seafile)
 - 40106 (hemmelig)
+- 40107 (marzban xray)
 - 40110 (kopia)
 - 40111 (portainer)
