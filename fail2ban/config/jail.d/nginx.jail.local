@@ -1,0 +1,7 @@
+[nginx]
+enabled = true
+chain = DOCKER-USER
+#action = ban-proxy
+filter = nginx
+port = http,https
+logpath = /var/log/nginx/*access.bad.log

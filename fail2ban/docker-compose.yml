@@ -1,0 +1,48 @@
+services:
+  fail2ban:
+    image: crazymax/fail2ban:latest
+    container_name: fail2ban
+    restart: always
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - nginx_vlog:/var/log/nginx:ro
+      - vbandata:/data # Persist Fail2Ban data
+      - vjail:/data/jail.d:ro
+      - vaction:/data/action.d:ro
+      - vfilter:/data/filter.d:ro
+    environment:
+      F2B_IPTABLES_CHAIN: DOCKER-USER
+      TZ: $TZ
+
+volumes:
+  vbandata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VBAN_DATA_PATH}
+  vjail:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VJAIL_PATH}
+  vaction:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VACTION_PATH}
+  vfilter:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VFILTER_PATH}
+    
+  nginx_vlog:
+    name: nginx_vlog
+    external: true

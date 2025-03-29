@@ -1,0 +1,12 @@
+[DEFAULT]
+bantime = 3600 # 1h
+bantime.increment = true
+bantime.rndtime = 2048
+
+findtime = 600 # 10m
+maxretry = 5
+backend = auto
+#banaction = iptables-multiport-forward
+
+# your IPs
+ignoreip = 127.0.0.1/8 192.168.2.0/24
