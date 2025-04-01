@@ -13,8 +13,10 @@ services:
       - vjail:/data/jail.d:ro
       - vaction:/data/action.d:ro
       - vfilter:/data/filter.d:ro
+      - vlog:/var/log/fail2ban
     environment:
       F2B_IPTABLES_CHAIN: DOCKER-USER
+      F2B_LOG_TARGET: /var/log/fail2ban/fail2ban.log
       TZ: $TZ
 
 volumes:
@@ -42,7 +44,12 @@ volumes:
       type: none
       o: bind
       device: ${VFILTER_PATH}
-    
+  vlog:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VLOG_PATH}
   nginx_vlog:
     name: nginx_vlog
     external: true
