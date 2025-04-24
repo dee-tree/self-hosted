@@ -24,18 +24,30 @@ services:
             - ./config/docker-handle.sh:/docker-handle.sh:ro # script for stop/start containers
             - /var/run/docker.sock:/var/run/docker.sock:rw # docker unix socket to stop/start containers during snapshoting
 
-            # linkwarden
-            - linkwarden_data:/backup/linkwarden/data:ro
-            - linkwarden_pgdata:/backup/linkwarden/pgdata:ro
-
             # baikal
             - baikal_config:/backup/baikal/config:ro
             - baikal_data:/backup/baikal/data:ro # Specific folder
             - baikal_db:/backup/baikal/db:ro # all data (stored in external db)
 
+            # homebox
+            - homebox_vdata:/backup/homebox/data:ro
+            - homebox_pgdata:/backup/homebox/pgdata:ro
+
+            # linkwarden
+            - linkwarden_data:/backup/linkwarden/data:ro
+            - linkwarden_pgdata:/backup/linkwarden/pgdata:ro
+
             # obsidian
             - self-hosted-livesync-server_data:/backup/obsidian/data:ro
             - /path/to/couchdb/self-hosted-livesync-server/data/local.ini:/backup/obsidian/local.ini:ro
+
+            # paperless-ngx
+            - paperless-ngx_data:/backup/paperless/data:ro
+            - paperless-ngx_media:/backup/paperless/media:ro
+            - paperless-ngx_pgdata:/backup/paperless/pgdata:ro
+
+            # seafile data
+            - seafile_vdata:/backup/seafile/data:ro
         command:
             - server
             - start
@@ -88,8 +100,11 @@ volumes:
     name: baikal_db
     external: true
 
-  self-hosted-livesync-server_data:
-    name: self-hosted-livesync-server_data
+  homebox_vdata:
+    name: homebox_vdata
+    external: true
+  homebox_pgdata:
+    name: homebox_pgdata
     external: true
 
   linkwarden_data:
@@ -97,4 +112,22 @@ volumes:
     external: true
   linkwarden_pgdata:
     name: linkwarden_data
+    external: true
+
+  paperless-ngx_data:
+    name: paperless-ngx_data
+    external: true
+  paperless-ngx_media:
+    name: paperless-ngx_media
+    external: true
+  paperless-ngx_pgdata:
+    name: paperless-ngx_pgdata
+    external: true
+  
+  seafile_vdata:
+    name: seafile_vdata
+    external: true
+
+  self-hosted-livesync-server_data:
+    name: self-hosted-livesync-server_data
     external: true

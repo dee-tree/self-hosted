@@ -19,9 +19,13 @@
 - 50104 (linkwarden)
 - 50105 (seafile)
 - 50106 (hemmelig)
-- 50107 (marzban xray)
+- 50107 (homebox)
+- 50108 (paperless-ngx)
 - 50110 (kopia)
 - 50111 (portainer)
+- 50112 (grafana)
+- 50113 (prometheus)
+- 50114 (node-exporter)
 
 ### Hidden docker container ports on networks
 
@@ -30,6 +34,10 @@
 - 40104 (linkwarden)
 - 40105 (seafile)
 - 40106 (hemmelig)
-- 40107 (marzban xray)
+- 40107 (homebox)
+- 40108 (paperless-ngx)
 - 40110 (kopia)
 - 40111 (portainer)
+- 40112 (grafana)
+- 40113 (prometheus)
+- 40114 (node-exporter)
